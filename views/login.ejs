@@ -1,0 +1,19 @@
+<h1>login</h1>
+
+<form action="" method="POST" enctype="multipart/form-data">
+  <input type="email" name="email" placeholder="enter email" required />
+  <br /><br />
+  <input
+    type="password"
+    name="password"
+    placeholder="enter password"
+    required
+  />
+  <br /><br />
+  <input type="submit" value="login" />
+  <br /><br />
+</form>
+
+<% if(typeof message !== "undefined") { %>
+<h4 style="color: red"><%= message %></h4>
+<% } %>

@@ -1,0 +1,55 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time Messaging App</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <h1>Real-Time Messaging App</h1>
+    <div id="chatBox"></div>
+    <label for="message">Message:</label>
+    <input type="text" id="message" />
+    <button onclick="sendMessage()">Send Message</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <script>
+      const socket = io();
+      let currentUser;
+
+      const login = () => {
+        currentUser = prompt("Enter your username:");
+        socket.emit("login", currentUser);
+      };
+
+      const sendMessage = (to, message) => {
+        socket.emit("sendMessage", { from: currentUser, to, text: message });
+      };
+
+      // Call login function when the page loads
+      login();
+
+      const messageForm = document.getElementById("messageForm");
+      const messageInput = document.getElementById("messageInput");
+      const messagesList = document.getElementById("messages");
+
+      messageForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const friend = prompt("Enter your friend's username:");
+        const message = messageInput.value.trim();
+        if (friend !== "" && message !== "") {
+          sendMessage(friend, message);
+          messageInput.value = "";
+        }
+      });
+
+      socket.on("receiveMessage", (messageData) => {
+        const li = document.createElement("li");
+        li.textContent = `${messageData.from}: ${messageData.text}`;
+        messagesList.appendChild(li);
+      });
+    </script>
+  </body>
+</html>
